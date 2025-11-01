@@ -15,7 +15,7 @@ const Navbar = () => {
             H
           </div>
           <div className="leading-tight">
-            <p className="text-base font-semibold text-white">Herb</p>
+            <p className="text-base font-semibold text-white">HERB</p>
             <p className="text-xs text-muted">Your health AI buddy</p>
           </div>
         </Link>

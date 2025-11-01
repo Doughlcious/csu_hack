@@ -1,11 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-const stats = [
-  { label: "Members supported", value: "12k+" },
-  { label: "Avg. response time", value: "<2 min" },
-  { label: "Care partners", value: "320+" },
-];
+
 
 const highlights = [
   {
@@ -50,16 +46,6 @@ const HeroSection = () => {
           </Link>
         </div>
 
-        <dl className="grid gap-6 sm:grid-cols-3">
-          {stats.map(({ label, value }) => (
-            <div key={label} className="rounded-2xl border border-white/5 bg-white/5 p-5">
-              <dt className="text-xs font-semibold uppercase tracking-widest text-muted">
-                {label}
-              </dt>
-              <dd className="mt-2 text-2xl font-semibold text-white">{value}</dd>
-            </div>
-          ))}
-        </dl>
       </div>
 
       <div className="glass-card relative overflow-hidden rounded-3xl p-8">
