@@ -1,6 +1,9 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap,
+   Marker, 
+   useLoadScript,
+   } from "@react-google-maps/api";
 
 
 const MapComponent = () => {
@@ -61,20 +64,19 @@ const MapComponent = () => {
     [currentPosition, fetchNearbyHospitals]
   );
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          setCurrentPosition({ lat: latitude, lng: longitude });
-        },
-        (err) => {
-          console.log("Error getting location:", err);
-          
-        },
-        { enableHighAccuracy: true }
-      );
-    }
+useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        if (!res.ok) throw new Error("API error");
+        const data = await res.json();
+        setCurrentPosition({ lat: data.latitude, lng: data.longitude });
+      } catch (err) {
+        console.error("Error fetching IP location:", err);
+      }
+    };
+
+    fetchLocation();
   }, []);
 
   if (!isLoaded) return <div>Loading map...</div>;
