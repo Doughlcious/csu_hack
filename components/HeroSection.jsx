@@ -10,12 +10,16 @@ const highlights = [
   },
   {
     label: "Guided plans",
-    detail: "Receive actionable daily routines tailored to you.",
+    detail: "Receive actionable care measures.",
   },
   {
-    label: "Human experts",
-    detail: "Message licensed clinicians whenever you need extra support.",
+    label: "Severity Score",
+    detail: "Gives the ranking based on the symptoms and description"
   },
+  {
+    label: "Maps",
+    detail:"Renders the map with the specialized hospitals based on the patients need"
+  }
 ];
 
 const HeroSection = () => {
@@ -56,15 +60,15 @@ const HeroSection = () => {
         <div className="relative space-y-6">
           <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-6 shadow-inner">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-              Daily check-in
+              Patient's Checkin2
             </p>
             <p className="mt-4 text-sm text-muted">
               “I woke up feeling dizzy.” Herb recommends hydration, stretches,
               and an on-demand nurse consult if symptoms persist.
             </p>
             <div className="mt-6 flex items-center justify-between rounded-xl bg-emerald-500/10 px-4 py-3 text-xs font-medium text-emerald-200">
-              <span>Next follow-up</span>
-              <span>02:45 PM</span>
+              <span>Get Yourself Diagnosed</span>
+              <span></span>
             </div>
           </div>
 
