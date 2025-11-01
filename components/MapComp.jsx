@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GoogleMap,
@@ -65,19 +64,20 @@ const MapComponent = () => {
     [currentPosition, fetchNearbyHospitals]
   );
 
-  useEffect(() => {
+useEffect(() => {
     const fetchLocation = async () => {
       try {
         const res = await fetch("https://ipapi.co/json/");
+        if (!res.ok) throw new Error("API error");
         const data = await res.json();
         setCurrentPosition({ lat: data.latitude, lng: data.longitude });
       } catch (err) {
-        console.error("Failed to get IP-based location:", err);
+        console.error("Error fetching IP location:", err);
       }
     };
+
     fetchLocation();
   }, []);
-
 
   if (!isLoaded) return <div>Loading map...</div>;
   if (!currentPosition) return <div>Getting your location...</div>;
