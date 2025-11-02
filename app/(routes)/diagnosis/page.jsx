@@ -1,6 +1,10 @@
+"use client";
+
 import DiagnosisForm from "@/components/DiagnosisForm";
+import { deriveSpecialtySearch } from "@/lib/diagnosisSpecialties";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useCallback } from "react";
 
 const benefits = [
   {
@@ -21,6 +25,75 @@ const benefits = [
 ];
 
 const DiagnosisPage = () => {
+  const router = useRouter();
+
+  const toBase64 = useCallback(async (file) => {
+    const buffer = await file.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 0x8000;
+    let binary = "";
+
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.subarray(i, i + chunkSize);
+      binary += String.fromCharCode(...chunk);
+    }
+
+    return btoa(binary);
+  }, []);
+
+  const handleSubmit = useCallback(
+    async ({ symptoms, files }) => {
+      const images = await Promise.all(
+        (files ?? []).map(async (file) => ({
+          mimeType: file.type || "image/jpeg",
+          data: await toBase64(file),
+        }))
+      );
+
+      const response = await fetch("/api/gemini", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          symptoms,
+          images,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorPayload = await response.json().catch(() => null);
+        const message =
+          errorPayload?.error ||
+          "We couldn’t reach Herb right now. Please try again.";
+        throw new Error(message);
+      }
+
+      const payload = await response.json();
+      const caseId =
+        (typeof crypto !== "undefined" && crypto.randomUUID?.()) ||
+        `case-${Date.now()}`;
+
+      const storagePayload = {
+        generatedAt: new Date().toISOString(),
+        symptoms,
+        analysis: payload,
+        specialty: deriveSpecialtySearch(payload),
+      };
+
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(
+          `herb-diagnosis-${caseId}`,
+          JSON.stringify(storagePayload)
+        );
+      }
+
+      router.push(`/diagnosis/result?case=${caseId}`);
+      return payload;
+    },
+    [router, toBase64]
+  );
+
   return (
     <main className="py-16">
       <div className="page-shell space-y-16">
@@ -52,7 +125,7 @@ const DiagnosisPage = () => {
         </header>
 
         <section className="grid gap-12 lg:grid-cols-[1fr_0.65fr]">
-          <DiagnosisForm />
+          <DiagnosisForm onSubmit={handleSubmit} />
 
           <aside className="glass-card flex h-fit flex-col gap-6 rounded-3xl p-8">
             <h2 className="text-2xl font-semibold text-white">

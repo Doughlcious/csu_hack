@@ -37,7 +37,10 @@ const MapPage = () => {
         </div>
 
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-          <MapComp />
+          <MapComp
+            title="Hospitals & clinics near you"
+            highlight="Tap a marker or list item to see contact details."
+          />
 
           <aside className="glass-card flex h-full flex-col rounded-3xl p-8">
             <div className="space-y-4">
